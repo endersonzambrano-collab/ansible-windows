@@ -1,0 +1,12 @@
+---
+- name: Playbook de Actualizacion de Windows
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Instalar actualizaciones Criticas y de Seguridad
+      ansible.windows.win_updates:
+        category_names:
+          - SecurityUpdates
+          - CriticalUpdates
+        state: installed
+        reboot: yes
