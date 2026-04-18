@@ -17,7 +17,7 @@
           - CriticalUpdates
           - UpdateRollups      # Atrapa las Actualizaciones Acumulativas
           - DefinitionUpdates  # Atrapa las actualizaciones de Windows Defender
-        server_selection: microsoft_update
+        server_selection: windows_update  # <--- CORRECCIÓN AQUÍ
         state: installed
         reboot: yes
         reboot_timeout: 3600
@@ -30,5 +30,5 @@
           - CriticalUpdates
           - UpdateRollups
           - DefinitionUpdates
-        server_selection: microsoft_update
+        server_selection: windows_update  # <--- CORRECCIÓN AQUÍ
         state: searched
