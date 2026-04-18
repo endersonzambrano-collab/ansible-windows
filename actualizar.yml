@@ -1,13 +1,20 @@
 ---
-- name: Playbook de Actualizacion de Windows
+- name: Playbook de Actualizacion Masiva de Windows
   hosts: all
   gather_facts: yes
+  
+  # Estos tiempos extra evitan que AWX tire error 400 cuando el server se reinicia o se satura
+  vars:
+    ansible_winrm_read_timeout_sec: 120
+    ansible_winrm_operation_timeout_sec: 90
+
   tasks:
-    - name: Instalar parches directo desde Microsoft Update
+    - name: Instalar parches criticos y de seguridad (Microsoft Update)
       ansible.windows.win_updates:
         category_names:
           - SecurityUpdates
           - CriticalUpdates
-        server_selection: microsoft_update  # <--- ESTA ES LA MAGIA
+        server_selection: microsoft_update
         state: installed
         reboot: yes
+        reboot_timeout: 3600 # Espera hasta 1 hora a que el server regrese del reinicio
