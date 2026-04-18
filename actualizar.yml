@@ -4,26 +4,31 @@
   gather_facts: yes
   
   vars:
+    # Aumentamos los tiempos para que AWX no se asuste si el servidor se reinicia o se pone lento
     ansible_winrm_read_timeout_sec: 120
     ansible_winrm_operation_timeout_sec: 90
 
   tasks:
-    # Tarea 1: Hace el trabajo pesado y reinicia
-    - name: Instalar parches criticos y de seguridad
+    # Tarea 1: El trabajo pesado (Descargar, instalar y reiniciar)
+    - name: Instalar TODOS los parches (Criticos, Seguridad, Acumulativos y Defender)
       ansible.windows.win_updates:
         category_names:
           - SecurityUpdates
           - CriticalUpdates
+          - UpdateRollups      # Atrapa las Actualizaciones Acumulativas
+          - DefinitionUpdates  # Atrapa las actualizaciones de Windows Defender
         server_selection: microsoft_update
         state: installed
         reboot: yes
         reboot_timeout: 3600
 
-    # Tarea 2: El truco para limpiar la pantalla "Pending"
+    # Tarea 2: El truco de magia (Obligar a Windows a darse cuenta de que ya termino)
     - name: Forzar refresco visual de Windows Update
       ansible.windows.win_updates:
         category_names:
           - SecurityUpdates
           - CriticalUpdates
+          - UpdateRollups
+          - DefinitionUpdates
         server_selection: microsoft_update
         state: searched
